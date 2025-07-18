@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
     const newTodo = new Todo({ text: req.body.text });
     const savedTodo = await newTodo.save();
     res.json(savedTodo);
-})
+});
 
 // PUT update todo
 router.put("/:id", async (req, res) => {
@@ -30,5 +30,15 @@ router.delete("/:id", async (req, res) => {
     const deleted = await Todo.findByIdAndDelete(req.params.id);
     res.json(deleted);
 });
+
+// DELETE all todos
+router.delete("/", async (req, res) => {
+    try {
+        await Todo.deleteMany({});
+        res.status(200).json({ message : "All tasks deleted."});
+    } catch (err) {
+        res.status(500).json({ message : "Error clearing tasks", error: err});
+    }
+})
 
 module.exports = router;
