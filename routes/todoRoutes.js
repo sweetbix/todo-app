@@ -17,12 +17,16 @@ router.post("/", async (req, res) => {
 
 // PUT update todo
 router.put("/:id", async (req, res) => {
-    const updated = await Todo.findByIdAndUpdate(
-        req.params.id,
-        {completed: true},
-        {new: true}
-    );
-    res.json(updated);
+    try {
+        const updated = await Todo.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {new: true}
+        );
+        res.json(updated);
+    } catch (err) {
+        res.status(500).json({ error : "Update failed"})
+    }
 });
 
 // DELETE a todo
