@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const todoRoutes = require("./routes/todoRoutes");
+const authRoutes = require("./routes/authRoutes");
 const PORT = process.env.PORT || 3001;
 const cors = require("cors");
 
@@ -12,7 +13,9 @@ app.use(express.json());
 app.use(cors({
     origin: "http://localhost:3000"
 }));
+
 app.use("/api/todos", todoRoutes);
+app.use("/api/auth", authRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
