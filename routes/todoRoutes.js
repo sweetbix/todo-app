@@ -54,7 +54,7 @@ router.delete("/:id", async (req, res) => {
 router.delete("/", async (req, res) => {
     try {
         const result = await Todo.deleteMany({ userId: req.user.id });
-        res.status(200).json({ message : "All tasks deleted.", deleted: result.deletedCount });
+        res.status(200).json({ message : "All tasks deleted.", deleted: result.deletedCount});
     } catch (err) {
         res.status(500).json({ message : "Error clearing tasks", error: err});
     }
