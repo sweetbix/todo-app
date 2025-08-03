@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken"); // for creating login tokens
+const cookieParser = require("cookie-parser");
 const User = require("../models/User");
 const dotenv = require("dotenv");
 
@@ -34,11 +35,14 @@ router.post("/register", async (req, res) => {
             expiresIn: JWT_EXPIRATION,
         });
 
-        res.status(201).json({
-            message: "User registered successfully",
-            token,
-            user: { id: newUser._id, username: newUser.username }, 
-            });
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false, // set true for prod
+            sameSite: "Strict",
+            maxAge: 60 * 60 * 1000, // 1 hour
+        });
+
+        res.json({ message: "Registered successfully" });
 
     } catch (err) {
         res.status(500).json({ error: err.message});
@@ -70,7 +74,15 @@ router.post("/login", async (req, res) => {
             expiresIn: JWT_EXPIRATION,
         });
 
-        res.json({ token, user: { id: user._id, username: user.username} });
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false, // set true for prod
+            sameSite: "Strict",
+            maxAge: 60 * 60 * 1000, // 1 hour
+        });
+
+        res.json({ message: "Logged in successfully "});
+
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

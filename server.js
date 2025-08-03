@@ -5,10 +5,12 @@ const todoRoutes = require("./routes/todoRoutes");
 const authRoutes = require("./routes/authRoutes");
 const PORT = process.env.PORT || 3001;
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
 const app = express();
 
+app.use(cookieParser())
 app.use(express.json());
 app.use(cors({
     origin: "http://localhost:3000"
