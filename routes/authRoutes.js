@@ -31,7 +31,7 @@ router.post("/register", async (req, res) => {
         const newUser = await User.create({ username, password });
 
         // auto login after register
-        const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, {
+        const token = jwt.sign({ userId: newUser._id, username: newUser.username }, JWT_SECRET, {
             expiresIn: JWT_EXPIRATION,
         });
 
@@ -70,7 +70,7 @@ router.post("/login", async (req, res) => {
         if (!isMatch) return res.status(400).json({ error: "Invalid password" });
 
         // create JWT token
-        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { 
+        const token = jwt.sign({ userId: user._id, username: user.username }, JWT_SECRET, { 
             expiresIn: JWT_EXPIRATION,
         });
 
@@ -86,6 +86,29 @@ router.post("/login", async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+})
+
+router.get("/check", (req,res) => {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(401).json({ message: "Not logged in" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        res.json({ username: decoded.username });
+    } catch {
+        res.status(401).json({ message: "Invalid token" });
+    }
+});
+
+router.post("/logout", (req, res) => {
+    res.clearCookie("token", {
+        httpOnly:true,
+        secure:false, // set true for prod
+        sameSite:"Strict",
+    });
+    res.json({ message: "Logged out successfully" });
 })
 
 module.exports = router;
