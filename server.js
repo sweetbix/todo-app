@@ -23,8 +23,6 @@ app.use("/api/auth", authRoutes);
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log("Connected to MongoDB!");
+        app.listen(PORT, () => console.log(`Server running on ${PORT}`));
     }) 
     .catch(err => console.error("MongoDB connection error:", err));
-
-// export for vercel
-module.exports = app;
