@@ -63,11 +63,11 @@ router.post("/login", async (req, res) => {
         // find user in database by username
         const user = await User.findOne({ username });
 
-        if (!user) return res.status(404).json({ error: "User not found" });
+        if (!user) return res.status(404).json({ message: "User not found" });
 
         // compare passwords
         const isMatch = await user.comparePassword(password);
-        if (!isMatch) return res.status(400).json({ error: "Invalid password" });
+        if (!isMatch) return res.status(400).json({ message: "Invalid password" });
 
         // create JWT token
         const token = jwt.sign({ userId: user._id, username: user.username }, JWT_SECRET, { 
