@@ -38,7 +38,7 @@ router.post("/register", async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: true, // set true for prod
-            sameSite: "Strict",
+            sameSite: "none",
             maxAge: 60 * 60 * 1000, // 1 hour
         });
 
@@ -77,7 +77,7 @@ router.post("/login", async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: true, // set true for prod
-            sameSite: "Strict",
+            sameSite: "none",
             maxAge: 60 * 60 * 1000, // 1 hour
         });
 
@@ -106,7 +106,7 @@ router.post("/logout", (req, res) => {
     res.clearCookie("token", {
         httpOnly:true,
         secure:true, // set true for prod
-        sameSite:"Strict",
+        sameSite:"none",
     });
     res.json({ message: "Logged out successfully" });
 })
